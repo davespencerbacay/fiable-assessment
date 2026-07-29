@@ -5,7 +5,7 @@ const App = () => {
   return (
     <Container maxWidth="sm" sx={{ py: 6 }}>
       <Stack spacing={3}>
-        <Typography variant="h4" component="h1" fontWeight={700}>
+        <Typography variant="h4" sx={{ fontWeight: 700 }}>
           Fiable Assessment
         </Typography>
 
