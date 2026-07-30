@@ -1,0 +1,80 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Overview/Assessment Overview" />
+
+# Assessment Overview
+
+## 1. Overview
+
+The goal is to create a React application that includes a component to visualize the placement of an object on a 5x5 grid (table). The position and direction of the object are determined by an input string with the format **"x,y direction"** (e.g., **"1,1 NORTH"**). The project will use Material UI for the user interface components and Storybook to document and demonstrate the functionality of the component.
+
+## 2. Technologies
+
+- **React**: JavaScript framework for building the user interface.
+- **Material UI**: React component library for implementing the UI with pre-built components and customizable theming.
+- **Storybook**: Tool to document and develop components in isolation.
+
+## 3. Functional Requirements
+
+### 3.1 Grid Component
+
+- The component will render a 5x5 grid (table) using Material UI.
+- The grid should allow the visualization of an object placed on the grid based on the input string.
+- The bottom left of the grid (**0,0**) is considered South West.
+- The string input will contain:
+  - **x** and **y** coordinates (ranging from 0 to 4)
+  - **Direction**: one of the four cardinal directions (**NORTH, EAST, SOUTH, WEST**)
+- Example: **1,1 NORTH**
+
+### 3.2 Object Placement
+
+- The object will be represented as a small, identifiable element (e.g., an icon or a marker).
+- The component will use the input string to determine:
+  - The **x,y** position where the object should appear on the grid
+  - The direction in which the object is facing, visually indicated (e.g., by rotating the icon)
+
+### 3.3 Input Handling
+
+- The component will receive a string in the format **"x,y DIRECTION"** as a prop.
+- The component will validate the input to ensure that:
+  - **x** and **y** are integers between 0 and 4
+  - Direction is one of: **NORTH, EAST, SOUTH, WEST**
+
+### 3.4 Grid Rendering
+
+- The grid will be a fixed 5x5 layout.
+- The grid cells will be rendered using Material UI's Grid or Table component.
+
+### 3.5 Direction Indicators
+
+- The object’s orientation based on direction will be shown by rotating the object or using arrows to indicate the direction.
+
+## 4. Component Design
+
+### 4.1 Input Parsing
+
+- A helper function will parse the string into **x**, **y**, and **direction** values.
+- Invalid input will be handled gracefully with error messages.
+
+### 4.2 Material UI Integration
+
+- Use Material UI's grid or table system to create the 5x5 layout.
+- Use Material UI icons or a custom element to represent the object.
+- Style the grid and object with Material UI theming for consistency with the application design.
+
+## 5. Storybook Integration
+
+### 5.1 Storybook Setup
+
+- Install and configure Storybook in the React project.
+- Create stories to demonstrate the grid component's functionality.
+
+### 5.2 Component Stories
+
+Create stories that showcase different scenarios:
+
+- Object placed at different positions with varying directions
+- Edge cases like placing the object at the grid boundaries (e.g., **"0,0 SOUTH"**, **"4,4 WEST"**)
+- Invalid input handled gracefully
+
+This specification outlines the structure and features of the React application and the grid component, providing a clear guide for development and integration with Storybook.
