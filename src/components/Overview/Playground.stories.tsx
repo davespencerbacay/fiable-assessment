@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { useMemo, useState } from 'react'
 import { Header } from '../Header'
 import { GridTable } from '../GridTable'
 import { LabeledValue } from '../LabeledValue'
@@ -21,28 +22,77 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
+const acceptedDirections = ['NORTH', 'EAST', 'SOUTH', 'WEST'] as const
+
+const parsePositionInput = (value: string) => {
+    const parts = value.split(',').map((part) => part.trim())
+
+    if (parts.length !== 3) {
+        return null
+    }
+
+    const [xPart, yPart, directionPart] = parts
+    const x = Number(xPart)
+    const y = Number(yPart)
+    const direction = directionPart.toUpperCase() as GridTableDirection
+
+    const isValidDirection = acceptedDirections.includes(direction as (typeof acceptedDirections)[number])
+
+    if (!Number.isInteger(x) || x < 0 || x > 4) {
+        return null
+    }
+
+    if (!Number.isInteger(y) || y < 0 || y > 4) {
+        return null
+    }
+
+    if (!isValidDirection) {
+        return null
+    }
+
+    return { x, y, direction }
+}
+
 export const Playground: Story = {
     render: () => {
-        const positionX = 4;
-        const positionY = 2;
-        const direction: GridTableDirection = 'SOUTH';
+        const [inputValue, setInputValue] = useState('0, 0, NORTH')
+        const [appliedValue, setAppliedValue] = useState('0, 0, NORTH')
+        const [errorMessage, setErrorMessage] = useState('')
 
-        const capitalize = (value?: string) => value ? value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() : '';
+        const parsedValue = useMemo(() => parsePositionInput(appliedValue), [appliedValue])
+
+        const positionX = parsedValue?.x ?? 0
+        const positionY = parsedValue?.y ?? 0
+        const direction: GridTableDirection = parsedValue?.direction ?? 'NORTH'
+
+        const capitalize = (value?: string) => (value ? value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() : '')
 
         const directionIcon = (direction: GridTableDirection) => {
             switch (direction) {
                 case 'NORTH':
-                    return <KeyboardArrowUp fontSize="small" />;
+                    return <KeyboardArrowUp fontSize="small" />
                 case 'SOUTH':
-                    return <KeyboardArrowDown fontSize="small" />;
+                    return <KeyboardArrowDown fontSize="small" />
                 case 'EAST':
-                    return <ArrowRight fontSize="small" />;
+                    return <ArrowRight fontSize="small" />
                 case 'WEST':
-                    return <ArrowLeft fontSize="small" />;
+                    return <ArrowLeft fontSize="small" />
                 default:
-                    return null;
+                    return null
             }
-        };
+        }
+
+        const handleApply = () => {
+            const nextValue = parsePositionInput(inputValue)
+
+            if (!nextValue) {
+                setErrorMessage('Use the format: 0, 0, NORTH')
+                return
+            }
+
+            setErrorMessage('')
+            setAppliedValue(inputValue)
+        }
 
         return (
             <Box sx={{ maxWidth: 1240, mx: 'auto', py: 2 }}>
@@ -72,17 +122,25 @@ export const Playground: Story = {
                                 <Typography variant="h6" sx={{ fontWeight: 800, lineHeight: 1.2 }}>
                                     Enter the position and direction
                                 </Typography>
+
+                                <Typography variant="body2" color="text.secondary">
+                                    Accepted format: <strong>0, 0, NORTH</strong>
+                                </Typography>
                             </Box>
 
                             <Stack direction="row" spacing={2} sx={{ alignItems: 'flex-start' }}>
                                 <TextField
                                     fullWidth
                                     label='Position format'
-                                    defaultValue="0, 0, NORTH"
+                                    value={inputValue}
+                                    onChange={(event) => setInputValue(event.target.value)}
+                                    helperText={errorMessage || 'Only accepted format: "0, 0, NORTH"'}
+                                    error={Boolean(errorMessage)}
                                 />
 
                                 <Button
                                     variant="contained"
+                                    onClick={handleApply}
                                     sx={{
                                         height: 56,
                                         px: 3,
