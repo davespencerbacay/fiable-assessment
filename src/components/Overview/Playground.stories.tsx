@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useMemo, useState } from 'react'
+import { Alert } from '../Alert'
 import { Header } from '../Header'
 import { GridTable } from '../GridTable'
 import { LabeledValue } from '../LabeledValue'
@@ -53,11 +54,71 @@ const parsePositionInput = (value: string) => {
     return { x, y, direction }
 }
 
+const validatePositionInput = (value: string) => {
+    const errors: string[] = []
+    const parts = value.split(',').map((part) => part.trim())
+
+    if (parts.length !== 3) {
+        errors.push('Invalid input format. Use: xAxis,yAxis,direction')
+        return errors
+    }
+
+    const [xPart, yPart, directionPart] = parts
+    const gridTableSize = 5
+    const maxIndex = gridTableSize - 1
+
+    if (xPart.length === 0 || yPart.length === 0 || directionPart.length === 0) {
+        errors.push('Invalid input format. All three values are required: xAxis,yAxis,direction')
+    }
+
+    const x = Number(xPart)
+    const y = Number(yPart)
+    const direction = directionPart.toUpperCase()
+
+    if (!Number.isFinite(x) || Number.isNaN(x)) {
+        errors.push('xAxis must be numeric.')
+    } else {
+        if (x < 0) {
+            errors.push(`xAxis must be greater than or equal to 0.`)
+        }
+
+        if (x > maxIndex) {
+            errors.push(`xAxis must be less than or equal to ${maxIndex}.`)
+        }
+
+        if (!Number.isInteger(x)) {
+            errors.push('xAxis must be a whole number.')
+        }
+    }
+
+    if (!Number.isFinite(y) || Number.isNaN(y)) {
+        errors.push('yAxis must be numeric.')
+    } else {
+        if (y < 0) {
+            errors.push(`yAxis must be greater than or equal to 0.`)
+        }
+
+        if (y > maxIndex) {
+            errors.push(`yAxis must be less than or equal to ${maxIndex}.`)
+        }
+
+        if (!Number.isInteger(y)) {
+            errors.push('yAxis must be a whole number.')
+        }
+    }
+
+    if (!acceptedDirections.includes(direction as (typeof acceptedDirections)[number])) {
+        errors.push('direction must be one of: NORTH, SOUTH, EAST, WEST.')
+    }
+
+    return errors
+}
+
 export const Playground: Story = {
     render: () => {
         const [inputValue, setInputValue] = useState('0, 0, NORTH')
         const [appliedValue, setAppliedValue] = useState('0, 0, NORTH')
-        const [errorMessage, setErrorMessage] = useState('')
+        const [validationErrors, setValidationErrors] = useState<string[]>([])
 
         const parsedValue = useMemo(() => parsePositionInput(appliedValue), [appliedValue])
 
@@ -83,16 +144,18 @@ export const Playground: Story = {
         }
 
         const handleApply = () => {
-            const nextValue = parsePositionInput(inputValue)
+            const nextErrors = validatePositionInput(inputValue)
 
-            if (!nextValue) {
-                setErrorMessage('Use the format: 0, 0, NORTH')
+            if (nextErrors.length > 0) {
+                setValidationErrors(nextErrors)
                 return
             }
 
-            setErrorMessage('')
+            setValidationErrors([])
             setAppliedValue(inputValue)
         }
+
+        const gridTableSize = 5;
 
         return (
             <Box sx={{ maxWidth: 1240, mx: 'auto', py: 2 }}>
@@ -134,8 +197,7 @@ export const Playground: Story = {
                                     label='Position format'
                                     value={inputValue}
                                     onChange={(event) => setInputValue(event.target.value)}
-                                    helperText={errorMessage || 'Only accepted format: "0, 0, NORTH"'}
-                                    error={Boolean(errorMessage)}
+                                    helperText='Only accepted format: "0, 0, NORTH"'
                                 />
 
                                 <Button
@@ -153,6 +215,18 @@ export const Playground: Story = {
                                     Apply
                                 </Button>
                             </Stack>
+
+                            {validationErrors.length > 0 ? (
+                                <Alert severity="error" title="Validation error">
+                                    <Stack component="ul" spacing={0.5} sx={{ margin: 0, paddingLeft: 2 }}>
+                                        {validationErrors.map((error) => (
+                                            <li key={error}>
+                                                <Typography variant="body2">{error}</Typography>
+                                            </li>
+                                        ))}
+                                    </Stack>
+                                </Alert>
+                            ) : null}
 
                             <Stack
                                 direction="row"
@@ -186,7 +260,7 @@ export const Playground: Story = {
                             justifyContent: 'center',
                         }}
                     >
-                        <GridTable x={positionX} y={positionY} direction={direction} />
+                        <GridTable x={positionX} y={positionY} direction={direction} size={gridTableSize} />
                     </Paper>
                 </Stack>
             </Box>
