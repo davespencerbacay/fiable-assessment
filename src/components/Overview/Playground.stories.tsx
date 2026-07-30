@@ -12,6 +12,24 @@ import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown'
 import ArrowRight from '@mui/icons-material/ArrowRight'
 import ArrowLeft from '@mui/icons-material/ArrowLeft'
 import { Button } from '../Button'
+import {
+    DEFAULT_PLAYGROUND_INPUT,
+    DIRECTION_OPTIONS_TEXT,
+    GRID_ERROR_MESSAGE,
+    GRID_TABLE_SIZE,
+    PLAYGROUND_BUTTON_LABEL,
+    PLAYGROUND_ACCEPTED_FORMAT_TEXT,
+    PLAYGROUND_INPUT_LABEL,
+    PLAYGROUND_SECTION_LABEL,
+    PLAYGROUND_SECTION_TITLE,
+    PLAYGROUND_VALIDATION_TITLE,
+} from '../../constants/constants'
+import {
+    capitalizeText,
+    getParsedDirectionOrDefault,
+    parsePositionInput,
+    validatePositionInput,
+} from '../../utils/playgroundUtils'
 
 const meta = {
     title: 'Overview/Assessment Playground',
@@ -24,110 +42,17 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-const acceptedDirections = ['NORTH', 'EAST', 'SOUTH', 'WEST'] as const
-
-const parsePositionInput = (value: string) => {
-    const parts = value.split(',').map((part) => part.trim())
-
-    if (parts.length !== 3) {
-        return null
-    }
-
-    const [xPart, yPart, directionPart] = parts
-    const x = Number(xPart)
-    const y = Number(yPart)
-    const direction = directionPart.toUpperCase() as GridTableDirection
-
-    const isValidDirection = acceptedDirections.includes(direction as (typeof acceptedDirections)[number])
-
-    if (!Number.isInteger(x) || x < 0 || x > 4) {
-        return null
-    }
-
-    if (!Number.isInteger(y) || y < 0 || y > 4) {
-        return null
-    }
-
-    if (!isValidDirection) {
-        return null
-    }
-
-    return { x, y, direction }
-}
-
-const validatePositionInput = (value: string) => {
-    const errors: string[] = []
-    const parts = value.split(',').map((part) => part.trim())
-
-    if (parts.length !== 3) {
-        errors.push('Invalid input format. Use: xAxis,yAxis,direction')
-        return errors
-    }
-
-    const [xPart, yPart, directionPart] = parts
-    const gridTableSize = 5
-    const maxIndex = gridTableSize - 1
-
-    if (xPart.length === 0 || yPart.length === 0 || directionPart.length === 0) {
-        errors.push('Invalid input format. All three values are required: xAxis,yAxis,direction')
-    }
-
-    const x = Number(xPart)
-    const y = Number(yPart)
-    const direction = directionPart.toUpperCase()
-
-    if (!Number.isFinite(x) || Number.isNaN(x)) {
-        errors.push('xAxis must be numeric.')
-    } else {
-        if (x < 0) {
-            errors.push(`xAxis must be greater than or equal to 0.`)
-        }
-
-        if (x > maxIndex) {
-            errors.push(`xAxis must be less than or equal to ${maxIndex}.`)
-        }
-
-        if (!Number.isInteger(x)) {
-            errors.push('xAxis must be a whole number.')
-        }
-    }
-
-    if (!Number.isFinite(y) || Number.isNaN(y)) {
-        errors.push('yAxis must be numeric.')
-    } else {
-        if (y < 0) {
-            errors.push(`yAxis must be greater than or equal to 0.`)
-        }
-
-        if (y > maxIndex) {
-            errors.push(`yAxis must be less than or equal to ${maxIndex}.`)
-        }
-
-        if (!Number.isInteger(y)) {
-            errors.push('yAxis must be a whole number.')
-        }
-    }
-
-    if (!acceptedDirections.includes(direction as (typeof acceptedDirections)[number])) {
-        errors.push('direction must be one of: NORTH, SOUTH, EAST, WEST.')
-    }
-
-    return errors
-}
-
 export const Playground: Story = {
     render: () => {
-        const [inputValue, setInputValue] = useState('0, 0, NORTH')
-        const [appliedValue, setAppliedValue] = useState('0, 0, NORTH')
+        const [inputValue, setInputValue] = useState(DEFAULT_PLAYGROUND_INPUT)
+        const [appliedValue, setAppliedValue] = useState(DEFAULT_PLAYGROUND_INPUT)
         const [validationErrors, setValidationErrors] = useState<string[]>([])
 
         const parsedValue = useMemo(() => parsePositionInput(appliedValue), [appliedValue])
 
         const positionX = parsedValue?.x ?? 0
         const positionY = parsedValue?.y ?? 0
-        const direction: GridTableDirection = parsedValue?.direction ?? 'NORTH'
-
-        const capitalize = (value?: string) => (value ? value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() : '')
+        const direction: GridTableDirection = getParsedDirectionOrDefault(parsedValue?.direction)
 
         const directionIcon = (direction: GridTableDirection) => {
             switch (direction) {
@@ -156,7 +81,7 @@ export const Playground: Story = {
             setAppliedValue(inputValue)
         }
 
-        const gridTableSize = 5;
+        const gridTableSize = GRID_TABLE_SIZE
 
         return (
             <Box sx={{ maxWidth: 1240, mx: 'auto', py: 2 }}>
@@ -180,24 +105,30 @@ export const Playground: Story = {
                         <Stack spacing={2.25}>
                             <Box>
                                 <Typography variant="overline" sx={{ color: 'text.secondary', letterSpacing: 1.6 }}>
-                                    Playground input
+                                    {PLAYGROUND_SECTION_LABEL}
                                 </Typography>
 
                                 <Typography variant="h6" sx={{ fontWeight: 800, lineHeight: 1.2 }}>
-                                    Enter the position and direction
+                                    {PLAYGROUND_SECTION_TITLE}
                                 </Typography>
 
-                                <Typography variant="body2" color="text.secondary">
-                                    Accepted format: xAxis,yAxis,direction (e.g., 2,3,NORTH). Position X and Y must be integers between 0 and {gridTableSize - 1}. Direction must be one of: NORTH, SOUTH, EAST, WEST.
+                                <Typography variant="body2" color="textSecondary">
+                                    {PLAYGROUND_ACCEPTED_FORMAT_TEXT} {gridTableSize - 1}. Direction must be one of: {DIRECTION_OPTIONS_TEXT}.
                                 </Typography>
                             </Box>
 
                             <Stack direction="row" spacing={2} sx={{ alignItems: 'flex-start' }}>
                                 <TextField
                                     fullWidth
-                                    label='Position format'
+                                    label={PLAYGROUND_INPUT_LABEL}
                                     value={inputValue}
                                     onChange={(event) => setInputValue(event.target.value)}
+                                    onKeyDown={(event) => {
+                                        if (event.key === 'Enter') {
+                                            event.preventDefault()
+                                            handleApply()
+                                        }
+                                    }}
                                 />
 
                                 <Button
@@ -210,11 +141,11 @@ export const Playground: Story = {
                                         textTransform: 'none',
                                         fontWeight: 700,
                                     }}
-                                    label='Apply' />
+                                    label={PLAYGROUND_BUTTON_LABEL} />
                             </Stack>
 
                             {validationErrors.length > 0 ? (
-                                <Alert severity="error" title="Validation error">
+                                <Alert severity="error" title={PLAYGROUND_VALIDATION_TITLE}>
                                     <Stack component="ul" spacing={0.5} sx={{ margin: 0, paddingLeft: 2 }}>
                                         {validationErrors.map((error) => (
                                             <li key={error}>
@@ -238,7 +169,7 @@ export const Playground: Story = {
                                     value={`Row ${positionY}`}
                                     icon={<HeightIcon sx={{ transform: 'rotate(90deg)' }} />}
                                 />
-                                <LabeledValue title="Direction" value={capitalize(direction)} icon={directionIcon(direction)} />
+                                <LabeledValue title="Direction" value={capitalizeText(direction)} icon={directionIcon(direction)} />
                             </Stack> : null}
                         </Stack>
                     </Paper>
@@ -263,7 +194,7 @@ export const Playground: Story = {
                             direction={direction}
                             size={gridTableSize}
                             error={validationErrors.length > 0}
-                            errorMessage="INVALID"
+                            errorMessage={GRID_ERROR_MESSAGE}
                         />
                     </Paper>
                 </Stack>

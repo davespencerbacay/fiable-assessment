@@ -5,6 +5,20 @@ import ArrowLeft from '@mui/icons-material/ArrowLeft'
 import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk'
 import { Box, Stack, Table, TableBody, TableContainer, TableRow } from '@mui/material'
 import { Card } from '../Card'
+import {
+  DIRECTION_VALUES,
+  GRID_SELECTED_CARD_DESCRIPTION,
+  GRID_SELECTED_CARD_TITLE,
+  GRID_CELL_SIZE,
+  GRID_ERROR_MESSAGE,
+  GRID_TABLE_SIZE,
+  GRID_VALID_CARD_DESCRIPTION,
+  GRID_VALID_CARD_TITLE,
+  GRID_X_LABEL,
+  GRID_Y_AXIS_COLUMN_WIDTH,
+  GRID_Y_AXIS_TO_TABLE_GAP,
+  GRID_Y_LABEL,
+} from '../../constants/constants'
 import { AxisValue, AxisXLabel, AxisYLabel, GridTableContainer, StyledGridCell } from './GridTable.styles'
 import type { GridTableProps } from './GridTable.types'
 
@@ -52,26 +66,27 @@ const PlacedIcon = ({ direction }: { direction: NonNullable<GridTableProps['dire
 }
 
 export const GridTable = ({
-  size = 5,
-  cellSize = 90,
-  xLabel = 'POSITION X',
-  yLabel = 'POSITION Y',
+  size = GRID_TABLE_SIZE,
+  cellSize = GRID_CELL_SIZE,
+  xLabel = GRID_X_LABEL,
+  yLabel = GRID_Y_LABEL,
   x,
   y,
   direction,
   error = false,
-  errorMessage = 'INVALID',
+  errorMessage = GRID_ERROR_MESSAGE,
 }: GridTableProps) => {
   const axisValues = Array.from({ length: size }, (_, index) => index)
   const reversedYValues = [...axisValues].reverse()
   const boardSize = size * cellSize
-  const yAxisColumnWidth = 24
-  const yAxisToGridGap = 12
+  const yAxisColumnWidth = GRID_Y_AXIS_COLUMN_WIDTH
+  const yAxisToGridGap = GRID_Y_AXIS_TO_TABLE_GAP
   const hasPlacement = typeof x === 'number' && typeof y === 'number' && direction !== undefined
+  const validAxisRange = axisValues.join(' | ')
   const validPlacementSummary = [
-    `Position X: 0 | 1 | 2 | 3 | 4`,
-    `Position Y: 0 | 1 | 2 | 3 | 4`,
-    `Direction: SOUTH | NORTH | EAST | WEST`,
+    `Position X: ${validAxisRange}`,
+    `Position Y: ${validAxisRange}`,
+    `Direction: ${DIRECTION_VALUES.join(' | ')}`,
   ]
   const selectedPlacementSummary = hasPlacement && !error
     ? [
@@ -167,13 +182,13 @@ export const GridTable = ({
 
       <Box sx={{ minWidth: { xs: '100%', lg: 280 }, width: { xs: '100%', lg: 320 } }}>
         <Card
-          title="Valid Position"
-          description="Valid position x, position y and direction values"
+          title={GRID_VALID_CARD_TITLE}
+          description={GRID_VALID_CARD_DESCRIPTION}
           list={validPlacementSummary}
         />
         <Card
-          title="Selected Position"
-          description="Selected position x, position y and direction values"
+          title={GRID_SELECTED_CARD_TITLE}
+          description={GRID_SELECTED_CARD_DESCRIPTION}
           list={selectedPlacementSummary}
         />
       </Box>

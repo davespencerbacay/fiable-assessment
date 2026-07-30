@@ -1,4 +1,5 @@
 import { createTheme } from '@mui/material/styles'
+import { APP_FONT_FAMILY } from '../constants/constants'
 
 export const appTheme = createTheme({
   palette: {
@@ -8,5 +9,8 @@ export const appTheme = createTheme({
     secondary: {
       main: '#6F6F6F',
     },
+  },
+  typography: {
+    fontFamily: APP_FONT_FAMILY,
   },
 })
