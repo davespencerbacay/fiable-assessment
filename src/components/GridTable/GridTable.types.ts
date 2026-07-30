@@ -1,3 +1,4 @@
+export type GridTableDirection = 'NORTH' | 'EAST' | 'SOUTH' | 'WEST' | undefined
 export interface GridTableProps {
   size?: number
   cellSize?: number
@@ -5,5 +6,5 @@ export interface GridTableProps {
   yLabel?: string
   x?: number | undefined
   y?: number | undefined
-  direction?: 'NORTH' | 'EAST' | 'SOUTH' | 'WEST' | undefined
+  direction?: GridTableDirection
 }
