@@ -50,7 +50,7 @@ const PlacedIcon = ({ direction }: { direction: NonNullable<GridTableProps['dire
   )
 }
 
-export const GridTable = ({ size = 5, cellSize = 90, xLabel = 'x', yLabel = 'y', x, y, direction }: GridTableProps) => {
+export const GridTable = ({ size = 5, cellSize = 90, xLabel = 'POSITION X', yLabel = 'POSITION Y', x, y, direction }: GridTableProps) => {
   const axisValues = Array.from({ length: size }, (_, index) => index)
   const reversedYValues = [...axisValues].reverse()
   const boardSize = size * cellSize

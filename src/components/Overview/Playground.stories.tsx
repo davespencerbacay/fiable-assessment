@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Header } from '../Header'
 import { GridTable } from '../GridTable'
 import { LabeledValue } from '../LabeledValue'
-import { Stack } from '@mui/material'
+import { Box, Button, Paper, Stack, TextField, Typography } from '@mui/material'
 import { GridTableDirection } from '../GridTable/GridTable.types'
 import HeightIcon from '@mui/icons-material/Height';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp'
@@ -32,37 +32,106 @@ export const Playground: Story = {
         const directionIcon = (direction: GridTableDirection) => {
             switch (direction) {
                 case 'NORTH':
-                    return <KeyboardArrowUp fontSize="small" color="primary" />;
+                    return <KeyboardArrowUp fontSize="small" />;
                 case 'SOUTH':
-                    return <KeyboardArrowDown fontSize="small" color="primary" />;
+                    return <KeyboardArrowDown fontSize="small" />;
                 case 'EAST':
-                    return <ArrowRight fontSize="small" color="primary" />;
+                    return <ArrowRight fontSize="small" />;
                 case 'WEST':
-                    return <ArrowLeft fontSize="small" color="primary" />;
+                    return <ArrowLeft fontSize="small" />;
                 default:
                     return null;
             }
         };
 
         return (
-            <Stack spacing={3}>
-                <Header
-                    title="Grid Object Placement"
-                    badgeText="Playground"
-                    subtitle="Visualize an object on a 5x5 grid based on position and direction."
-                />
+            <Box sx={{ maxWidth: 1240, mx: 'auto', py: 2 }}>
+                <Stack spacing={3.5}>
+                    <Header
+                        title="Grid Object Placement"
+                        badgeText="Playground"
+                        subtitle="Visualize an object on a 5x5 grid based on position and direction."
+                    />
 
-                <Stack direction="row" spacing={3}>
-                    <LabeledValue title="Position X" value={`Column ${positionX}`} icon={<HeightIcon />} />
-                    <LabeledValue title="Position Y" value={`Row ${positionY}`} icon={<HeightIcon sx={{
-                        transform: 'rotate(90deg)',
-                    }} />} />
-                    <LabeledValue title="Direction" value={capitalize(direction)} icon={directionIcon(direction)} />
+                    <Paper
+                        elevation={0}
+                        sx={{
+                            p: { xs: 2.5, md: 3.5 },
+                            borderRadius: 4,
+                            border: '1px solid',
+                            borderColor: 'divider',
+                            boxShadow: '0 16px 40px rgba(15, 23, 42, 0.08)',
+                        }}
+                    >
+                        <Stack spacing={2.25}>
+                            <Box>
+                                <Typography variant="overline" sx={{ color: 'text.secondary', letterSpacing: 1.6 }}>
+                                    Playground input
+                                </Typography>
+
+                                <Typography variant="h6" sx={{ fontWeight: 800, lineHeight: 1.2 }}>
+                                    Enter the position and direction
+                                </Typography>
+                            </Box>
+
+                            <Stack direction="row" spacing={2} sx={{ alignItems: 'flex-start' }}>
+                                <TextField
+                                    fullWidth
+                                    label='Position format'
+                                    defaultValue="0, 0, NORTH"
+                                />
+
+                                <Button
+                                    variant="contained"
+                                    sx={{
+                                        height: 56,
+                                        px: 3,
+                                        whiteSpace: 'nowrap',
+                                        borderRadius: 2,
+                                        textTransform: 'none',
+                                        fontWeight: 700,
+                                    }}
+                                >
+                                    Apply
+                                </Button>
+                            </Stack>
+
+                            <Stack
+                                direction="row"
+                                spacing={2}
+                                sx={{
+                                    flexWrap: 'wrap',
+                                }}
+                            >
+                                <LabeledValue title="Position X" value={`Column ${positionX}`} icon={<HeightIcon />} />
+                                <LabeledValue
+                                    title="Position Y"
+                                    value={`Row ${positionY}`}
+                                    icon={<HeightIcon sx={{ transform: 'rotate(90deg)' }} />}
+                                />
+                                <LabeledValue title="Direction" value={capitalize(direction)} icon={directionIcon(direction)} />
+                            </Stack>
+                        </Stack>
+                    </Paper>
+
+                    <Paper
+                        elevation={0}
+                        sx={{
+                            p: { xs: 2.5, md: 3.5 },
+                            borderRadius: 4,
+                            border: '1px solid',
+                            borderColor: 'divider',
+                            backgroundColor: 'background.paper',
+                            boxShadow: '0 16px 40px rgba(15, 23, 42, 0.08)',
+                            alignItems: 'center',
+                            display: 'flex',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <GridTable x={positionX} y={positionY} direction={direction} />
+                    </Paper>
                 </Stack>
-
-
-                <GridTable x={positionX} y={positionY} direction={direction} />
-            </Stack>
+            </Box>
         )
     },
 }

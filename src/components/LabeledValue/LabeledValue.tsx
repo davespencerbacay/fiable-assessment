@@ -1,6 +1,5 @@
-import { LabeledValueChip, LabeledValueContainer, LabeledValueText, LabeledValueTitle } from './LabeledValue.styles'
+import { LabeledValueChip, LabeledValueContainer, LabeledValueIcon, LabeledValueText, LabeledValueTitle } from './LabeledValue.styles'
 import type { LabeledValueProps } from './LabeledValue.types'
-import { Typography } from '@mui/material'
 
 export const LabeledValue = ({ title, value, icon }: LabeledValueProps) => {
     return (
@@ -8,10 +7,8 @@ export const LabeledValue = ({ title, value, icon }: LabeledValueProps) => {
             <LabeledValueTitle variant="h6">{title}</LabeledValueTitle>
 
             <LabeledValueChip>
-                {icon ? icon : null}
-                <LabeledValueText variant="body1">
-                    <Typography sx={{ marginBottom: 0, marginLeft: icon ? 1 : 0 }}>{value}</Typography>
-                </LabeledValueText>
+                {icon ? <LabeledValueIcon>{icon}</LabeledValueIcon> : null}
+                <LabeledValueText variant="body1">{value}</LabeledValueText>
             </LabeledValueChip>
         </LabeledValueContainer>
     )
