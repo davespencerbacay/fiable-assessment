@@ -51,49 +51,6 @@ Open:
 ```bash
 http://localhost:6006
 ```
-
-### Build Storybook for production
-
-```bash
-npm run build-storybook
-```
-
-The output will be generated in:
-
-```bash
-storybook-static
-```
-
-## Build the app
-
-```bash
-npm run build
-```
-
-The production app build will be generated in:
-
-```bash
-dist
-```
-
-## Vercel deployment
-
-The repository is configured for Vercel.
-
-### Storybook as the deployed site
-
-Current Vercel config is set to deploy Storybook as the site root:
-
-- Build command: `npm run build-storybook`
-- Output directory: `storybook-static`
-
-### App deployment
-
-If you want the app instead of Storybook, update Vercel settings or `vercel.json` to:
-
-- Build command: `npm run build`
-- Output directory: `dist`
-
 ## Validation and playground
 
 The playground validates input in the following format:
