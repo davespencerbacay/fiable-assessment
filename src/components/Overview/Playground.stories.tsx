@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Stack } from '@mui/material'
 import { Header } from '../Header'
+import { GridTable } from '../GridTable'
 
 const meta = {
     title: 'Overview/Assessment Playground',
@@ -21,6 +22,8 @@ export const Playground: Story = {
                 badgeText="Playground"
                 subtitle="Visualize an object on a 5x5 grid based on position and direction."
             />
+
+            <GridTable x={1} y={1} direction="NORTH" />
         </Stack>
     ),
 }

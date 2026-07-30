@@ -3,4 +3,7 @@ export interface GridTableProps {
   cellSize?: number
   xLabel?: string
   yLabel?: string
+  x?: number | undefined
+  y?: number | undefined
+  direction?: 'NORTH' | 'EAST' | 'SOUTH' | 'WEST' | undefined
 }

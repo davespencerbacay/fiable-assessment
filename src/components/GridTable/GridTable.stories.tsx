@@ -23,3 +23,11 @@ export const Compact: Story = {
     cellSize: 60,
   },
 }
+
+export const WithPlacement: Story = {
+  args: {
+    x: 1,
+    y: 1,
+    direction: 'NORTH',
+  },
+}
