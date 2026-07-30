@@ -50,7 +50,17 @@ const PlacedIcon = ({ direction }: { direction: NonNullable<GridTableProps['dire
   )
 }
 
-export const GridTable = ({ size = 5, cellSize = 90, xLabel = 'POSITION X', yLabel = 'POSITION Y', x, y, direction }: GridTableProps) => {
+export const GridTable = ({
+  size = 5,
+  cellSize = 90,
+  xLabel = 'POSITION X',
+  yLabel = 'POSITION Y',
+  x,
+  y,
+  direction,
+  error = false,
+  errorMessage = 'INVALID',
+}: GridTableProps) => {
   const axisValues = Array.from({ length: size }, (_, index) => index)
   const reversedYValues = [...axisValues].reverse()
   const boardSize = size * cellSize
@@ -78,7 +88,7 @@ export const GridTable = ({ size = 5, cellSize = 90, xLabel = 'POSITION X', yLab
             ))}
           </Box>
 
-          <TableContainer sx={{ width: boardSize, border: 0 }}>
+          <TableContainer sx={{ width: boardSize, border: 0, position: 'relative' }}>
             <Table sx={{ borderCollapse: 'collapse' }}>
               <TableBody>
                 {reversedYValues.map((rowValue) => (
@@ -92,6 +102,34 @@ export const GridTable = ({ size = 5, cellSize = 90, xLabel = 'POSITION X', yLab
                 ))}
               </TableBody>
             </Table>
+
+            {error ? (
+              <Box
+                sx={{
+                  position: 'absolute',
+                  inset: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  pointerEvents: 'none',
+                }}
+              >
+                <Box
+                  sx={{
+                    px: 2,
+                    py: 0.75,
+                    borderRadius: 999,
+                    backgroundColor: 'error.main',
+                    color: 'error.contrastText',
+                    fontWeight: 700,
+                    letterSpacing: '0.04em',
+                    boxShadow: '0 10px 24px rgba(0, 0, 0, 0.22)',
+                  }}
+                >
+                  {errorMessage}
+                </Box>
+              </Box>
+            ) : null}
           </TableContainer>
         </Stack>
 

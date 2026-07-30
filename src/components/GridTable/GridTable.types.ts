@@ -7,4 +7,6 @@ export interface GridTableProps {
   x?: number | undefined
   y?: number | undefined
   direction?: GridTableDirection
+  error?: boolean
+  errorMessage?: string
 }

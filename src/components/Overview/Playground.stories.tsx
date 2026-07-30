@@ -187,7 +187,7 @@ export const Playground: Story = {
                                 </Typography>
 
                                 <Typography variant="body2" color="text.secondary">
-                                    Accepted format: <strong>0, 0, NORTH</strong>
+                                    Accepted format: xAxis,yAxis,direction (e.g., 2,3,NORTH). Position X and Y must be integers between 0 and {gridTableSize - 1}. Direction must be one of: NORTH, SOUTH, EAST, WEST.
                                 </Typography>
                             </Box>
 
@@ -197,7 +197,6 @@ export const Playground: Story = {
                                     label='Position format'
                                     value={inputValue}
                                     onChange={(event) => setInputValue(event.target.value)}
-                                    helperText='Only accepted format: "0, 0, NORTH"'
                                 />
 
                                 <Button
@@ -260,7 +259,14 @@ export const Playground: Story = {
                             justifyContent: 'center',
                         }}
                     >
-                        <GridTable x={positionX} y={positionY} direction={direction} size={gridTableSize} />
+                        <GridTable
+                            x={positionX}
+                            y={positionY}
+                            direction={direction}
+                            size={gridTableSize}
+                            error={validationErrors.length > 0}
+                            errorMessage="INVALID"
+                        />
                     </Paper>
                 </Stack>
             </Box>
