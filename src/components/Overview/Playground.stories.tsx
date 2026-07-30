@@ -4,13 +4,14 @@ import { Alert } from '../Alert'
 import { Header } from '../Header'
 import { GridTable } from '../GridTable'
 import { LabeledValue } from '../LabeledValue'
-import { Box, Button, Paper, Stack, TextField, Typography } from '@mui/material'
+import { Box, Paper, Stack, TextField, Typography } from '@mui/material'
 import { GridTableDirection } from '../GridTable/GridTable.types'
 import HeightIcon from '@mui/icons-material/Height';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp'
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown'
 import ArrowRight from '@mui/icons-material/ArrowRight'
 import ArrowLeft from '@mui/icons-material/ArrowLeft'
+import { Button } from '../Button'
 
 const meta = {
     title: 'Overview/Assessment Playground',
@@ -200,7 +201,6 @@ export const Playground: Story = {
                                 />
 
                                 <Button
-                                    variant="contained"
                                     onClick={handleApply}
                                     sx={{
                                         height: 56,
@@ -210,9 +210,7 @@ export const Playground: Story = {
                                         textTransform: 'none',
                                         fontWeight: 700,
                                     }}
-                                >
-                                    Apply
-                                </Button>
+                                    label='Apply' />
                             </Stack>
 
                             {validationErrors.length > 0 ? (

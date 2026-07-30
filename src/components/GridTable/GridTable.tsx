@@ -4,6 +4,7 @@ import ArrowRight from '@mui/icons-material/ArrowRight'
 import ArrowLeft from '@mui/icons-material/ArrowLeft'
 import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk'
 import { Box, Stack, Table, TableBody, TableContainer, TableRow } from '@mui/material'
+import { Card } from '../Card'
 import { AxisValue, AxisXLabel, AxisYLabel, GridTableContainer, StyledGridCell } from './GridTable.styles'
 import type { GridTableProps } from './GridTable.types'
 
@@ -67,88 +68,116 @@ export const GridTable = ({
   const yAxisColumnWidth = 24
   const yAxisToGridGap = 12
   const hasPlacement = typeof x === 'number' && typeof y === 'number' && direction !== undefined
+  const validPlacementSummary = [
+    `Position X: 0 | 1 | 2 | 3 | 4`,
+    `Position Y: 0 | 1 | 2 | 3 | 4`,
+    `Direction: SOUTH | NORTH | EAST | WEST`,
+  ]
+  const selectedPlacementSummary = hasPlacement && !error
+    ? [
+      `Position X: ${x}`,
+      `Position Y: ${y}`,
+      `Direction: ${direction}`,
+    ]
+    : []
 
   return (
-    <Stack direction="row" sx={{ alignItems: 'center' }}>
-      <AxisYLabel variant="h6">{yLabel}</AxisYLabel>
+    <Stack direction={{ xs: 'column', lg: 'row' }} spacing={3} sx={{ alignItems: 'flex-start' }}>
+      <Stack direction="row" sx={{ alignItems: 'center' }}>
+        <AxisYLabel variant="h6">{yLabel}</AxisYLabel>
 
-      <GridTableContainer>
-        <Stack direction="row" spacing={1.5} sx={{ alignItems: 'stretch' }}>
-          <Box
-            sx={{
-              width: yAxisColumnWidth,
-              height: boardSize,
-              display: 'grid',
-              gridTemplateRows: `repeat(${size}, ${cellSize}px)`,
-              placeItems: 'center',
-            }}
-          >
-            {reversedYValues.map((value) => (
-              <AxisValue key={`y-${value}`}>{value}</AxisValue>
-            ))}
-          </Box>
+        <GridTableContainer>
+          <Stack direction="row" spacing={1.5} sx={{ alignItems: 'stretch' }}>
+            <Box
+              sx={{
+                width: yAxisColumnWidth,
+                height: boardSize,
+                display: 'grid',
+                gridTemplateRows: `repeat(${size}, ${cellSize}px)`,
+                placeItems: 'center',
+              }}
+            >
+              {reversedYValues.map((value) => (
+                <AxisValue key={`y-${value}`}>{value}</AxisValue>
+              ))}
+            </Box>
 
-          <TableContainer sx={{ width: boardSize, border: 0, position: 'relative' }}>
-            <Table sx={{ borderCollapse: 'collapse' }}>
-              <TableBody>
-                {reversedYValues.map((rowValue) => (
-                  <TableRow key={`row-${rowValue}`}>
-                    {axisValues.map((col) => (
-                      <StyledGridCell key={`cell-${rowValue}-${col}`} sx={{ width: cellSize, height: cellSize, p: 0 }}>
-                        {hasPlacement && x === col && y === rowValue && direction && !error ? <PlacedIcon direction={direction} /> : null}
-                      </StyledGridCell>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <TableContainer sx={{ width: boardSize, border: 0, position: 'relative' }}>
+              <Table sx={{ borderCollapse: 'collapse' }}>
+                <TableBody>
+                  {reversedYValues.map((rowValue) => (
+                    <TableRow key={`row-${rowValue}`}>
+                      {axisValues.map((col) => (
+                        <StyledGridCell key={`cell-${rowValue}-${col}`} sx={{ width: cellSize, height: cellSize, p: 0 }}>
+                          {hasPlacement && x === col && y === rowValue && direction && !error ? <PlacedIcon direction={direction} /> : null}
+                        </StyledGridCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
 
-            {error ? (
-              <Box
-                sx={{
-                  position: 'absolute',
-                  inset: 0,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  pointerEvents: 'none',
-                }}
-              >
+              {error ? (
                 <Box
                   sx={{
-                    px: 2,
-                    py: 0.75,
-                    borderRadius: 999,
-                    backgroundColor: 'error.main',
-                    color: 'error.contrastText',
-                    fontWeight: 700,
-                    letterSpacing: '0.04em',
-                    boxShadow: '0 10px 24px rgba(0, 0, 0, 0.22)',
+                    position: 'absolute',
+                    inset: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    pointerEvents: 'none',
                   }}
                 >
-                  {errorMessage}
+                  <Box
+                    sx={{
+                      px: 2,
+                      py: 0.75,
+                      borderRadius: 999,
+                      backgroundColor: 'error.main',
+                      color: 'error.contrastText',
+                      fontWeight: 700,
+                      letterSpacing: '0.04em',
+                      boxShadow: '0 10px 24px rgba(0, 0, 0, 0.22)',
+                    }}
+                  >
+                    {errorMessage}
+                  </Box>
                 </Box>
-              </Box>
-            ) : null}
-          </TableContainer>
-        </Stack>
+              ) : null}
+            </TableContainer>
+          </Stack>
 
-        <Stack sx={{ width: boardSize, marginLeft: `${yAxisColumnWidth + yAxisToGridGap}px`, marginTop: 1 }}>
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: `repeat(${size}, ${cellSize}px)`,
-              justifyItems: 'center',
-            }}
-          >
-            {axisValues.map((value) => (
-              <AxisValue key={`x-${value}`}>{value}</AxisValue>
-            ))}
-          </Box>
+          <Stack sx={{ width: boardSize, marginLeft: `${yAxisColumnWidth + yAxisToGridGap}px`, marginTop: 1 }}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: `repeat(${size}, ${cellSize}px)`,
+                justifyItems: 'center',
+              }}
+            >
+              {axisValues.map((value) => (
+                <AxisValue key={`x-${value}`}>{value}</AxisValue>
+              ))}
+            </Box>
 
-          <AxisXLabel variant="h6">{xLabel}</AxisXLabel>
-        </Stack>
-      </GridTableContainer>
+            <AxisXLabel variant="h6">{xLabel}</AxisXLabel>
+          </Stack>
+        </GridTableContainer>
+      </Stack>
+
+      <Box sx={{ minWidth: { xs: '100%', lg: 280 }, width: { xs: '100%', lg: 320 } }}>
+        <Card
+          title="Valid Position"
+          description="Valid position x, position y and direction values"
+          list={validPlacementSummary}
+        />
+        <Card
+          title="Selected Position"
+          description="Selected position x, position y and direction values"
+          list={selectedPlacementSummary}
+        />
+      </Box>
+
     </Stack>
   )
 }

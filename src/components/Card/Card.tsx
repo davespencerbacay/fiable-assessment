@@ -13,7 +13,7 @@ export const Card = ({ title, description, list }: CardProps) => {
                 <CardList>
                     {list.map((item, index) => (
                         <CardListItem key={index}>
-                            <Typography sx={{ marginBottom: 0 }}>{item}</Typography>
+                            <Typography sx={{ marginBottom: 0, fontSize: 12 }}>{item}</Typography>
                         </CardListItem>
                     ))}
                 </CardList>

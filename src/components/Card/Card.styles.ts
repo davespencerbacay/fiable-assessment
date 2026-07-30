@@ -7,6 +7,7 @@ export const CardContainer = styled(Box)(({ theme }) => ({
     padding: theme.spacing(3),
     backgroundColor: theme.palette.background.paper,
     boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.08)',
+    marginBottom: theme.spacing(2),
 }))
 
 export const CardTitle = styled(Typography)(({ theme }) => ({
