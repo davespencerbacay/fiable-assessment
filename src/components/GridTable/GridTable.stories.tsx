@@ -31,3 +31,13 @@ export const WithPlacement: Story = {
     direction: 'NORTH',
   },
 }
+
+export const Invalid: Story = {
+  args: {
+    x: 1,
+    y: 1,
+    direction: 'NORTH',
+    error: true,
+    errorMessage: 'INVALID',
+  },
+}

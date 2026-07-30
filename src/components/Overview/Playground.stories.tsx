@@ -227,7 +227,7 @@ export const Playground: Story = {
                                 </Alert>
                             ) : null}
 
-                            <Stack
+                            {validationErrors.length === 0 ? <Stack
                                 direction="row"
                                 spacing={2}
                                 sx={{
@@ -241,7 +241,7 @@ export const Playground: Story = {
                                     icon={<HeightIcon sx={{ transform: 'rotate(90deg)' }} />}
                                 />
                                 <LabeledValue title="Direction" value={capitalize(direction)} icon={directionIcon(direction)} />
-                            </Stack>
+                            </Stack> : null}
                         </Stack>
                     </Paper>
 

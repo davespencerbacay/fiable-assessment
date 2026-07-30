@@ -95,7 +95,7 @@ export const GridTable = ({
                   <TableRow key={`row-${rowValue}`}>
                     {axisValues.map((col) => (
                       <StyledGridCell key={`cell-${rowValue}-${col}`} sx={{ width: cellSize, height: cellSize, p: 0 }}>
-                        {hasPlacement && x === col && y === rowValue && direction ? <PlacedIcon direction={direction} /> : null}
+                        {hasPlacement && x === col && y === rowValue && direction && !error ? <PlacedIcon direction={direction} /> : null}
                       </StyledGridCell>
                     ))}
                   </TableRow>
