@@ -6,7 +6,7 @@ Assessment project built with React, Vite, Material UI, and Storybook.
 
 Open the live Storybook here:
 
-- https://fiable-assessment-6i568ats7-evedave1999-2990s-projects.vercel.app
+- [https://fiable-assessment-6i568ats7-evedave1999-2990s-projects.vercel.app](https://fiable-assessment.vercel.app/?path=/docs/overview-assessment-overview--docs)
 
 ## What was built
 
